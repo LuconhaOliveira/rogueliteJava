@@ -19,7 +19,7 @@ public class Game extends Canvas implements Runnable, KeyListener {
     private final int SCALE = 2;
     private final BufferedImage image;
 
-    Player player = new Player(WIDTH/2-16,HEIGHT/2-16);
+    static Player player;
 
     public Game() {
         addKeyListener(this);
@@ -78,6 +78,9 @@ public class Game extends Canvas implements Runnable, KeyListener {
 
     public static void main(String[] args){
         Game game = new Game();
+
+        player = new Player(game.WIDTH / 2 - 16, game.HEIGHT / 2 - 16);
+
         game.start();
     }
 
@@ -104,11 +107,15 @@ public class Game extends Canvas implements Runnable, KeyListener {
                 System.out.println("FPS: "+frames);
                 frames = 0;
                 timer+=1000;
+                if (player.dashCooldown>0){
+                    player.dashCooldown-=1;
+                }
             }
         }
 
         stop();
     }
+
 
     @Override
     public void keyTyped(KeyEvent e) {
@@ -123,6 +130,7 @@ public class Game extends Canvas implements Runnable, KeyListener {
             case KeyEvent.VK_LEFT, KeyEvent.VK_A -> player.left=true;
             case KeyEvent.VK_RIGHT, KeyEvent.VK_D -> player.right=true;
         }
+        if (e.getKeyCode()==KeyEvent.VK_SPACE&&player.dashCooldown<=0)player.dash=true;
     }
 
     @Override
@@ -132,6 +140,7 @@ public class Game extends Canvas implements Runnable, KeyListener {
             case KeyEvent.VK_DOWN, KeyEvent.VK_S  -> player.down=false;
             case KeyEvent.VK_LEFT, KeyEvent.VK_A  -> player.left=false;
             case KeyEvent.VK_RIGHT, KeyEvent.VK_D  -> player.right=false;
+            case KeyEvent.VK_SPACE -> player.dash=false;
         }
     }
 }

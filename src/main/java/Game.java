@@ -14,12 +14,15 @@ public class Game extends Canvas implements Runnable, KeyListener {
     public JFrame frame;
     public Thread thread;
     public boolean isRunning = true;
-    private final int WIDTH =960;
-    private final int HEIGHT = 540;
+    private final int WIDTH =600;
+    private final int HEIGHT = 350;
     private final int SCALE = 2;
     private final BufferedImage image;
 
     static Player player;
+
+    PlayerShoot[] shoots={new PlayerShoot(0,0,"up")};
+    PlayerShoot[] newShoots;
 
     public Game() {
         addKeyListener(this);
@@ -55,6 +58,24 @@ public class Game extends Canvas implements Runnable, KeyListener {
 
     public void tick(){
         player.tick();
+        for(int i=0;i<shoots.length;i++) {
+            if (!shoots[i].remove) {
+                shoots[i].tick();
+            } else {
+                newShoots = new PlayerShoot[shoots.length - 1];
+                int p = 0;
+                for (PlayerShoot shoot : shoots) {
+                    if (!shoot.remove) {
+                        newShoots[p] = shoot;
+                        p++;
+                    }
+                }
+                shoots = newShoots;
+                if(shoots.length==0){
+                    PlayerShoot[] shoots = {new PlayerShoot(0,0,"up")};
+                }
+            }
+        }
     }
 
     public void render(){
@@ -68,6 +89,7 @@ public class Game extends Canvas implements Runnable, KeyListener {
         g.fillRect(0, 0, WIDTH, HEIGHT);
 
         player.render(g);
+        for(PlayerShoot shoot:shoots) shoot.render(g);
 
         g.dispose();
         g = bs.getDrawGraphics();
@@ -125,12 +147,47 @@ public class Game extends Canvas implements Runnable, KeyListener {
     @Override
     public void keyPressed(KeyEvent e) {
         switch (e.getKeyCode()){
-            case KeyEvent.VK_UP, KeyEvent.VK_W -> player.up=true;
-            case KeyEvent.VK_DOWN, KeyEvent.VK_S -> player.down=true;
-            case KeyEvent.VK_LEFT, KeyEvent.VK_A -> player.left=true;
-            case KeyEvent.VK_RIGHT, KeyEvent.VK_D -> player.right=true;
+            case KeyEvent.VK_W -> player.up=true;
+            case KeyEvent.VK_S -> player.down=true;
+            case KeyEvent.VK_A -> player.left=true;
+            case KeyEvent.VK_D -> player.right=true;
         }
         if (e.getKeyCode()==KeyEvent.VK_SPACE&&player.dashCooldown<=0)player.dash=true;
+
+        switch (e.getKeyCode()){
+            case KeyEvent.VK_UP -> {
+                newShoots = new PlayerShoot[shoots.length+1];
+
+                for (int i=0;i<shoots.length;i++){
+                    newShoots[i]=shoots[i];
+                }
+                newShoots[shoots.length+1]=new PlayerShoot(player.x,player.y,"up");
+            }
+            case KeyEvent.VK_DOWN -> {
+                newShoots = new PlayerShoot[shoots.length+1];
+
+                for (int i=0;i<shoots.length;i++){
+                    newShoots[i]=shoots[i];
+                }
+                newShoots[shoots.length+1]=new PlayerShoot(player.x,player.y,"down");
+            }
+            case KeyEvent.VK_LEFT -> {
+                newShoots = new PlayerShoot[shoots.length+1];
+
+                for (int i=0;i<shoots.length;i++){
+                    newShoots[i]=shoots[i];
+                }
+                newShoots[shoots.length+1]=new PlayerShoot(player.x,player.y,"left");
+            }
+            case KeyEvent.VK_RIGHT -> {
+                newShoots = new PlayerShoot[shoots.length+1];
+
+                for (int i=0;i<shoots.length;i++){
+                    newShoots[i]=shoots[i];
+                }
+                newShoots[shoots.length+1]=new PlayerShoot(player.x,player.y,"right");
+            }
+        }
     }
 
     @Override

@@ -3,20 +3,22 @@ import java.awt.*;
 public class PlayerShoot extends Rectangle {
 
     public String direction;
+    public int speed=4;
     public int distance=0;
     public boolean remove=false;
 
-    public PlayerShoot(int x,int y){
+    public PlayerShoot(int x,int y, String direction){
         super(x,y,4,4);
+        this.direction = direction;
     }
 
     public void tick(){
         if(distance<=300) {
             switch (direction) {
-                case "left" -> x--;
-                case "right" -> x++;
-                case "up" -> y--;
-                case "down" -> y++;
+                case "left" -> x-=speed;
+                case "right" -> x+=speed;
+                case "up" -> y-=speed;
+                case "down" -> y+=speed;
             }
             distance++;
         }else remove=true;

@@ -14,10 +14,12 @@ public class Game extends Canvas implements Runnable, KeyListener {
     public JFrame frame;
     public Thread thread;
     public boolean isRunning = true;
-    private final int WIDTH =240;
-    private final int HEIGHT = 160;
-    private final int SCALE = 4;
+    private final int WIDTH =960;
+    private final int HEIGHT = 540;
+    private final int SCALE = 2;
     private final BufferedImage image;
+
+    Player player = new Player(WIDTH/2-16,HEIGHT/2-16);
 
     public Game() {
         addKeyListener(this);
@@ -29,7 +31,7 @@ public class Game extends Canvas implements Runnable, KeyListener {
     private void initFrame() {
         frame = new JFrame("Lorem Ipsum");
         frame.add(this);
-        frame.setResizable(false);
+        frame.setResizable(true);
         frame.pack();
         frame.setLocationRelativeTo(null);
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
@@ -52,7 +54,7 @@ public class Game extends Canvas implements Runnable, KeyListener {
     }
 
     public void tick(){
-
+        player.tick();
     }
 
     public void render(){
@@ -64,6 +66,8 @@ public class Game extends Canvas implements Runnable, KeyListener {
         Graphics g = image.getGraphics();
         g.setColor(new Color(0, 0, 0));
         g.fillRect(0, 0, WIDTH, HEIGHT);
+
+        player.render(g);
 
         g.dispose();
         g = bs.getDrawGraphics();
@@ -113,11 +117,21 @@ public class Game extends Canvas implements Runnable, KeyListener {
 
     @Override
     public void keyPressed(KeyEvent e) {
-
+        switch (e.getKeyCode()){
+            case KeyEvent.VK_UP, KeyEvent.VK_W -> player.up=true;
+            case KeyEvent.VK_DOWN, KeyEvent.VK_S -> player.down=true;
+            case KeyEvent.VK_LEFT, KeyEvent.VK_A -> player.left=true;
+            case KeyEvent.VK_RIGHT, KeyEvent.VK_D -> player.right=true;
+        }
     }
 
     @Override
     public void keyReleased(KeyEvent e) {
-
+        switch (e.getKeyCode()){
+            case KeyEvent.VK_UP, KeyEvent.VK_W  -> player.up=false;
+            case KeyEvent.VK_DOWN, KeyEvent.VK_S  -> player.down=false;
+            case KeyEvent.VK_LEFT, KeyEvent.VK_A  -> player.left=false;
+            case KeyEvent.VK_RIGHT, KeyEvent.VK_D  -> player.right=false;
+        }
     }
 }

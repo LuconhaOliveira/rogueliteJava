@@ -16,7 +16,7 @@ public class Game extends Canvas implements Runnable, KeyListener {
     public boolean isRunning = true;
     private final int WIDTH =960;
     private final int HEIGHT = 540;
-    private final int SCALE = 2;
+    private final int SCALE = 1;
     private final BufferedImage image;
 
     static Player player;
@@ -79,7 +79,7 @@ public class Game extends Canvas implements Runnable, KeyListener {
     public static void main(String[] args){
         Game game = new Game();
 
-        player = new Player(game.WIDTH / 2 - 16, game.HEIGHT / 2 - 16);
+        player = new Player(game.WIDTH / 2 - 16, game.HEIGHT - 64);
 
         game.start();
     }
@@ -107,9 +107,6 @@ public class Game extends Canvas implements Runnable, KeyListener {
                 System.out.println("FPS: "+frames);
                 frames = 0;
                 timer+=1000;
-                if (player.dashCooldown>0){
-                    player.dashCooldown-=1;
-                }
             }
         }
 
@@ -125,22 +122,18 @@ public class Game extends Canvas implements Runnable, KeyListener {
     @Override
     public void keyPressed(KeyEvent e) {
         switch (e.getKeyCode()){
-            case KeyEvent.VK_UP, KeyEvent.VK_W -> player.up=true;
-            case KeyEvent.VK_DOWN, KeyEvent.VK_S -> player.down=true;
             case KeyEvent.VK_LEFT, KeyEvent.VK_A -> player.left=true;
             case KeyEvent.VK_RIGHT, KeyEvent.VK_D -> player.right=true;
         }
-        if (e.getKeyCode()==KeyEvent.VK_SPACE&&player.dashCooldown<=0)player.dash=true;
+        //if (e.getKeyCode()==KeyEvent.VK_SPACE&&player.dashCooldown<=0)player.dash=true;
     }
 
     @Override
     public void keyReleased(KeyEvent e) {
         switch (e.getKeyCode()){
-            case KeyEvent.VK_UP, KeyEvent.VK_W  -> player.up=false;
-            case KeyEvent.VK_DOWN, KeyEvent.VK_S  -> player.down=false;
             case KeyEvent.VK_LEFT, KeyEvent.VK_A  -> player.left=false;
             case KeyEvent.VK_RIGHT, KeyEvent.VK_D  -> player.right=false;
-            case KeyEvent.VK_SPACE -> player.dash=false;
+            //case KeyEvent.VK_SPACE -> player.dash=false;
         }
     }
 }

@@ -6,6 +6,7 @@ import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
 import java.awt.image.BufferStrategy;
 import java.awt.image.BufferedImage;
+import java.util.Random;
 
 import javax.swing.JFrame;
 
@@ -14,12 +15,16 @@ public class Game extends Canvas implements Runnable, KeyListener {
     public JFrame frame;
     public Thread thread;
     public boolean isRunning = true;
-    private final int WIDTH =960;
-    private final int HEIGHT = 540;
+    static final int WIDTH =960;
+    static final int HEIGHT = 540;
     private final int SCALE = 1;
     private final BufferedImage image;
 
     static Player player;
+
+    static Enemies enemies;
+
+    public static World world;
 
     public Game() {
         addKeyListener(this);
@@ -55,6 +60,7 @@ public class Game extends Canvas implements Runnable, KeyListener {
 
     public void tick(){
         player.tick();
+        enemies.tick();
     }
 
     public void render(){
@@ -68,6 +74,8 @@ public class Game extends Canvas implements Runnable, KeyListener {
         g.fillRect(0, 0, WIDTH, HEIGHT);
 
         player.render(g);
+        enemies.render(g);
+        world.render(g);
 
         g.dispose();
         g = bs.getDrawGraphics();
@@ -80,6 +88,8 @@ public class Game extends Canvas implements Runnable, KeyListener {
         Game game = new Game();
 
         player = new Player(game.WIDTH / 2 - 16, game.HEIGHT - 64);
+        enemies = new Enemies(game.WIDTH,game.HEIGHT-64);
+        world = new World();
 
         game.start();
     }
@@ -124,6 +134,7 @@ public class Game extends Canvas implements Runnable, KeyListener {
         switch (e.getKeyCode()){
             case KeyEvent.VK_LEFT, KeyEvent.VK_A -> player.left=true;
             case KeyEvent.VK_RIGHT, KeyEvent.VK_D -> player.right=true;
+            case KeyEvent.VK_SPACE -> player.isShooting=true;
         }
         //if (e.getKeyCode()==KeyEvent.VK_SPACE&&player.dashCooldown<=0)player.dash=true;
     }
@@ -134,6 +145,7 @@ public class Game extends Canvas implements Runnable, KeyListener {
             case KeyEvent.VK_LEFT, KeyEvent.VK_A  -> player.left=false;
             case KeyEvent.VK_RIGHT, KeyEvent.VK_D  -> player.right=false;
             //case KeyEvent.VK_SPACE -> player.dash=false;
+            case KeyEvent.VK_SPACE -> player.isShooting=false;
         }
     }
 }

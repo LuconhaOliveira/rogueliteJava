@@ -41,25 +41,31 @@ public class Enemies extends Rectangle{
         }
     }
 
-    public static void killEnemy(ShootSolo shot){
-        for(int i=0;i<blocks.size();i++) {
-            EnemiesBlock blocoAtual = blocks.get(i);
-            if(blocoAtual.intersects(shot)) {
-                blocks.remove(i);
-                return;
-            }
-        }
+    public static void killEnemy(int index){
+        blocks.remove(index);
     }
     public static boolean isHit(ShootSolo shot) {
         for(int i = 0; i < blocks.size(); i++) {
             EnemiesBlock blocoAtual = blocks.get(i);
             if(blocoAtual.intersects(shot)) {
-                Enemies.killEnemy(shot);
+                damageEnemy(shot);
                 Game.kills++;
                 return true;
             }
         }
         return false;
+    }
+    public static void damageEnemy(ShootSolo shot){
+        for(int i=0;i<blocks.size();i++) {
+            EnemiesBlock blocoAtual = blocks.get(i);
+            if(blocoAtual.intersects(shot)) {
+                blocoAtual.life--;
+                if(blocoAtual.life<=0){
+                    killEnemy(i);
+                }
+                return;
+            }
+        }
     }
 
 

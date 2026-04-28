@@ -140,7 +140,6 @@ public class Game extends Canvas implements Runnable, KeyListener {
             case KeyEvent.VK_RIGHT, KeyEvent.VK_D -> player.right=true;
             case KeyEvent.VK_SPACE -> player.isShooting=true;
         }
-        //if (e.getKeyCode()==KeyEvent.VK_SPACE&&player.dashCooldown<=0)player.dash=true;
     }
 
     @Override
@@ -148,7 +147,6 @@ public class Game extends Canvas implements Runnable, KeyListener {
         switch (e.getKeyCode()){
             case KeyEvent.VK_LEFT, KeyEvent.VK_A  -> player.left=false;
             case KeyEvent.VK_RIGHT, KeyEvent.VK_D  -> player.right=false;
-            //case KeyEvent.VK_SPACE -> player.dash=false;
             case KeyEvent.VK_SPACE -> player.isShooting=false;
         }
     }

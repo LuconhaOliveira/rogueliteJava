@@ -19,6 +19,8 @@ public class Game extends Canvas implements Runnable, KeyListener {
     static final int HEIGHT = 540;
     private final int SCALE = 1;
     private final BufferedImage image;
+    public static int damage = 0;
+    public static int kills = 0;
 
     static Player player;
 
@@ -115,6 +117,8 @@ public class Game extends Canvas implements Runnable, KeyListener {
 
             if(System.currentTimeMillis()-timer>=1000) {
                 System.out.println("FPS: "+frames);
+                System.out.println("Kills: "+kills);
+                System.out.println("Damage: " +damage);
                 frames = 0;
                 timer+=1000;
             }

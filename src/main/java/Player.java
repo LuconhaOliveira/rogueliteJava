@@ -6,7 +6,7 @@ public class Player extends Rectangle {
     public int speed=4;
     int shotCooldown=6;
 
-    static PlayerShots playerShots;
+    PlayerShots playerShots;
 
     public Player(int x, int y){
         super(x,y,32,32);

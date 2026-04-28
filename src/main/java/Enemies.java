@@ -7,7 +7,7 @@ public class Enemies extends Rectangle{
     static int enemyX;
     public static ArrayList<EnemiesBlock> blocks = new ArrayList<EnemiesBlock>();
 
-    public static int cont=90;
+    public static int cont=32;
 
     public Enemies(int width,int height){
         super(0,0,width,height);
@@ -21,11 +21,15 @@ public class Enemies extends Rectangle{
             enemyX = ((new Random().nextInt(14))*64)+24;
             EnemiesBlock block = new EnemiesBlock(enemyX,16);
             blocks.add(block);
-            cont=90;
+            cont=32;
         }
-        if(cont%10==0){
+        if(cont%8==0){
             for(int i=0;i<blocks.size();i++){
                 blocks.get(i).y+=8;
+                if(blocks.get(i).y>=Game.HEIGHT-80){
+                    Game.damage++;
+                    blocks.remove(i);
+                }
             }
         }
         cont--;
@@ -37,22 +41,25 @@ public class Enemies extends Rectangle{
         }
     }
 
-    public static void killEnemy(int x){
+    public static void killEnemy(ShootSolo shot){
         for(int i=0;i<blocks.size();i++) {
-            if (blocks.get(i).x + 5 <= x + 8 && blocks.get(i).x + 5 >= x - 8) {
+            EnemiesBlock blocoAtual = blocks.get(i);
+            if(blocoAtual.intersects(shot)) {
                 blocks.remove(i);
                 return;
             }
         }
     }
-    public static boolean isHit(int x, int y) {
+    public static boolean isHit(ShootSolo shot) {
         for(int i = 0; i < blocks.size(); i++) {
             EnemiesBlock blocoAtual = blocks.get(i);
-            if(blocoAtual.intersects(new Rectangle(x,y,6,16))) {
-                return false;
+            if(blocoAtual.intersects(shot)) {
+                Enemies.killEnemy(shot);
+                Game.kills++;
+                return true;
             }
         }
-        return true;
+        return false;
     }
 
 

@@ -138,7 +138,18 @@ public class Game extends Canvas implements Runnable, KeyListener {
         switch (e.getKeyCode()){
             case KeyEvent.VK_LEFT, KeyEvent.VK_A -> player.left=true;
             case KeyEvent.VK_RIGHT, KeyEvent.VK_D -> player.right=true;
-            case KeyEvent.VK_SPACE -> player.isShooting=true;
+            case KeyEvent.VK_Z -> {
+                player.isShooting=true;
+                player.colorShot=1;
+            }
+            case KeyEvent.VK_X -> {
+                player.isShooting=true;
+                player.colorShot=2;
+            }
+            case KeyEvent.VK_C -> {
+                player.isShooting=true;
+                player.colorShot=3;
+            }
         }
     }
 
@@ -147,7 +158,7 @@ public class Game extends Canvas implements Runnable, KeyListener {
         switch (e.getKeyCode()){
             case KeyEvent.VK_LEFT, KeyEvent.VK_A  -> player.left=false;
             case KeyEvent.VK_RIGHT, KeyEvent.VK_D  -> player.right=false;
-            case KeyEvent.VK_SPACE -> player.isShooting=false;
+            case KeyEvent.VK_Z, KeyEvent.VK_X, KeyEvent.VK_C -> player.isShooting=false;
         }
     }
 }

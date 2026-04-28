@@ -5,6 +5,7 @@ public class Player extends Rectangle {
     public boolean right,left,isShooting;
     public int speed=4;
     int shotCooldown=6;
+    public int colorShot;
 
     PlayerShots playerShots;
 
@@ -18,7 +19,7 @@ public class Player extends Rectangle {
         if(right&&World.isFree(x+speed,y))x+=speed;
         if(left&&World.isFree(x-speed,y))x-=speed;
         if(shotCooldown<=0&&isShooting){
-            playerShots.addShot(x+13);
+            playerShots.addShot(x+13,colorShot);
             shotCooldown=6;
         }
         shotCooldown--;

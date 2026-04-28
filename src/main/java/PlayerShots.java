@@ -32,8 +32,8 @@ public class PlayerShots extends Rectangle {
         }
     }
 
-    public void addShot(int x){
-        ShootSolo shot = new ShootSolo(x,y);
+    public void addShot(int x,int color){
+        ShootSolo shot = new ShootSolo(x,y,color);
         shots.add(shot);
     }
 

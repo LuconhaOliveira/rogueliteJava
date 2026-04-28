@@ -7,7 +7,7 @@ public class Enemies extends Rectangle{
     static int enemyX;
     public static ArrayList<EnemiesBlock> blocks = new ArrayList<EnemiesBlock>();
 
-    public static int cont=32;
+    public static int cont=48;
 
     public Enemies(int width,int height){
         super(0,0,width,height);
@@ -21,7 +21,7 @@ public class Enemies extends Rectangle{
             enemyX = ((new Random().nextInt(14))*64)+24;
             EnemiesBlock block = new EnemiesBlock(enemyX,16);
             blocks.add(block);
-            cont=32;
+            cont=48;
         }
         if(cont%8==0){
             for(int i=0;i<blocks.size();i++){
@@ -41,31 +41,25 @@ public class Enemies extends Rectangle{
         }
     }
 
-    public static void killEnemy(int index){
-        blocks.remove(index);
+    public static void killEnemy(ShootSolo shot){
+        for(int i=0;i<blocks.size();i++) {
+            EnemiesBlock blocoAtual = blocks.get(i);
+            if(blocoAtual.intersects(shot)) {
+                blocks.remove(i);
+                Game.kills++;
+                return;
+            }
+        }
     }
     public static boolean isHit(ShootSolo shot) {
         for(int i = 0; i < blocks.size(); i++) {
             EnemiesBlock blocoAtual = blocks.get(i);
-            if(blocoAtual.intersects(shot)) {
-                damageEnemy(shot);
-                Game.kills++;
+            if(blocoAtual.intersects(shot)&&shot.color==blocoAtual.color) {
+                killEnemy(shot);
                 return true;
             }
         }
         return false;
-    }
-    public static void damageEnemy(ShootSolo shot){
-        for(int i=0;i<blocks.size();i++) {
-            EnemiesBlock blocoAtual = blocks.get(i);
-            if(blocoAtual.intersects(shot)) {
-                blocoAtual.life--;
-                if(blocoAtual.life<=0){
-                    killEnemy(i);
-                }
-                return;
-            }
-        }
     }
 
 

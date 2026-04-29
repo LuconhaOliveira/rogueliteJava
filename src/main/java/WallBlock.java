@@ -9,9 +9,9 @@ public class WallBlock extends Rectangle {
     }
 
     public void render(Graphics g) {
-        g.setColor(Color.pink);
+        g.setColor(new Color(255, 0, 255));
         g.fillRect(x, y, width, height);
-        g.setColor(Color.black);
+        g.setColor(new Color(0, 0, 0));
         g.drawRect(x, y, width, height);
     }
 }

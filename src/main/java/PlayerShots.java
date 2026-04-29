@@ -6,19 +6,20 @@ public class PlayerShots extends Rectangle {
 
     public static ArrayList<ShootSolo> shots = new ArrayList<ShootSolo>();
 
-    public PlayerShots(int y,int width, int height){
-        super(0,y-26,width,height);
+    public PlayerShots(int y){
+        super(0,y-16,Game.WIDTH, Game.HEIGHT -32);
     }
 
     public void tick(){
-        for (int i = 0; i < shots.size(); i++)shots.get(i).tick();
+        for (ShootSolo shot : shots) shot.tick();
         if(!shots.isEmpty()) {
             for (int i = 0; i < shots.size(); i++) {
-                if (shots.get(i).y < 32) {
+                ShootSolo currentShot = shots.get(i);
+                if (currentShot.y < 32) {
                     shots.remove(i);
                     return;
                 }
-                if (Enemies.isHit(shots.get(i))) {
+                if (Enemies.isHit(currentShot)) {
                     shots.remove(i);
                     return;
                 }
@@ -27,14 +28,11 @@ public class PlayerShots extends Rectangle {
     }
 
     public void render(Graphics g){
-        for(int i=0;i<shots.size();i++){
-            shots.get(i).render(g);
-        }
+        for (ShootSolo shot : shots) shot.render(g);
     }
 
     public void addShot(int x){
-        ShootSolo shot = new ShootSolo(x,y);
-        shots.add(shot);
+        shots.add(new ShootSolo(x,y));
     }
 
 }

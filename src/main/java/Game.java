@@ -6,7 +6,6 @@ import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
 import java.awt.image.BufferStrategy;
 import java.awt.image.BufferedImage;
-import java.util.Random;
 
 import javax.swing.JFrame;
 
@@ -38,7 +37,7 @@ public class Game extends Canvas implements Runnable, KeyListener {
     private void initFrame() {
         frame = new JFrame("Lorem Ipsum");
         frame.add(this);
-        frame.setResizable(true);
+        frame.setResizable(false);
         frame.pack();
         frame.setLocationRelativeTo(null);
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
@@ -89,8 +88,8 @@ public class Game extends Canvas implements Runnable, KeyListener {
     public static void main(String[] args){
         Game game = new Game();
 
-        player = new Player(game.WIDTH / 2 - 16, game.HEIGHT - 64);
-        enemies = new Enemies(game.WIDTH,game.HEIGHT-64);
+        player = new Player(WIDTH / 2 - 16, HEIGHT - 64);
+        enemies = new Enemies(WIDTH, HEIGHT-64);
         world = new World();
 
         game.start();

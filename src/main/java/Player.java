@@ -10,7 +10,7 @@ public class Player extends Rectangle {
 
     public Player(int x, int y){
         super(x,y,32,32);
-        playerShots = new PlayerShots(y,Game.WIDTH, Game.HEIGHT -32);
+        playerShots = new PlayerShots(y);
     }
 
     public void tick(){
@@ -25,7 +25,7 @@ public class Player extends Rectangle {
     }
 
     public void render(@org.jetbrains.annotations.NotNull Graphics g){
-        g.setColor(new Color(0, 60, 255));
+        g.setColor(new Color(0, 255, 255));
         g.fillRect(x,y,width,height);
         g.setColor(new Color(255,255,255));
         g.drawRect(x,y,width,height);

@@ -2,16 +2,14 @@ import java.awt.*;
 
 public class ShootSolo extends Rectangle {
 
-    public String direction;
-    public int distance=0;
-    public static int cont=10;
+    public int speed=10;
 
     public ShootSolo(int x,int y){
         super(x,y,6,16);
     }
 
     public void tick(){
-        y-=10;
+        y-=speed;
     }
 
     public void render(Graphics g){

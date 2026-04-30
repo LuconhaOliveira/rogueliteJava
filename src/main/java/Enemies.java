@@ -8,7 +8,7 @@ public class Enemies extends Rectangle{
     static int randomX;
     public static ArrayList<EnemiesBlock> blocks = new ArrayList<EnemiesBlock>();
 
-    public static int cont=48;
+    public static int cont=70;
 
     public Enemies(int width,int height){
         super(0,0,width,height);
@@ -20,15 +20,16 @@ public class Enemies extends Rectangle{
         if(cont<=0){
             randomX = random.nextInt(14)*64+24;
             blocks.add(new EnemiesBlock(randomX,16));
-            cont=60;
+            cont=70;
         }
         if(cont%10==0){
             for(int i=0;i<blocks.size();i++){
                 EnemiesBlock currentEnemy = blocks.get(i);
-                currentEnemy.y+=8;
+                currentEnemy.y+=6+3* currentEnemy.life;
                 if(currentEnemy.y>=Game.HEIGHT-80){
-                    Game.damage+=currentEnemy.life;
+                    Game.life--;
                     blocks.remove(i);
+                    Game.verifyEndGame();
                 }
             }
         }
@@ -64,5 +65,9 @@ public class Enemies extends Rectangle{
                 return;
             }
         }
+    }
+
+    public void clearEnemies(){
+        blocks.clear();
     }
 }

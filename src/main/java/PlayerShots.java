@@ -4,7 +4,7 @@ import java.util.Random;
 
 public class PlayerShots extends Rectangle {
 
-    public static ArrayList<ShootSolo> shots = new ArrayList<ShootSolo>();
+    public ArrayList<ShootSolo> shots = new ArrayList<ShootSolo>();
 
     public PlayerShots(int y){
         super(0,y-16,Game.WIDTH, Game.HEIGHT -32);

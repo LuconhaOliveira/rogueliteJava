@@ -1,7 +1,4 @@
-import java.awt.Canvas;
-import java.awt.Color;
-import java.awt.Dimension;
-import java.awt.Graphics;
+import java.awt.*;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
 import java.awt.image.BufferStrategy;
@@ -14,12 +11,15 @@ public class Game extends Canvas implements Runnable, KeyListener {
     public JFrame frame;
     public Thread thread;
     public boolean isRunning = true;
+    public static boolean gameOver=false;
+    public static boolean pause=false;
     static final int WIDTH =960;
     static final int HEIGHT = 540;
     private final int SCALE = 1;
     private final BufferedImage image;
-    public static int damage = 0;
     public static int kills = 0;
+    int highScore=0;
+    public static int life=5;
 
     static Player player;
 
@@ -60,8 +60,10 @@ public class Game extends Canvas implements Runnable, KeyListener {
     }
 
     public void tick(){
-        player.tick();
-        enemies.tick();
+        if(!pause){
+            player.tick();
+            enemies.tick();
+        }
     }
 
     public void render(){
@@ -74,9 +76,52 @@ public class Game extends Canvas implements Runnable, KeyListener {
         g.setColor(new Color(0, 0, 0));
         g.fillRect(0, 0, WIDTH, HEIGHT);
 
+
+
+        g.setColor(new Color(35, 117, 35));
+        g.setFont(new Font(Font.SERIF, Font.BOLD, 12));
+        FontMetrics fm = g.getFontMetrics();
+
+        String text="Life: ";
+        g.drawString(text, 8, 22);
+
+        int x = (fm.stringWidth(text))+8;
+        text="";
+        for(int i=1;i<=life;i++){
+            text+=".";
+        }
+        g.drawString(text, x, 19);
+
+        x += (fm.stringWidth(text))+8+20;
+        text="Points: "+kills;
+        g.drawString(text, x, 22);
+
+
+        x += (fm.stringWidth(text))+20;
+        text="High Score: "+highScore;
+        g.drawString(text, x, 22);
+
+
         player.render(g);
         enemies.render(g);
         world.render(g);
+
+        if(gameOver){
+            g.setColor(new Color(255,255,255));
+            g.setFont(new Font(Font.SERIF, Font.BOLD, 24));
+            fm = g.getFontMetrics();
+            text="GAME OVER!!";
+            x = (WIDTH - fm.stringWidth(text)) / 2;
+            int y = (HEIGHT - fm.getHeight()) / 2 + fm.getAscent();
+            g.drawString(text, x, y);
+
+            text="pressione 'R' para reiniciar.";
+            g.setFont(new Font(Font.SERIF, Font.BOLD, 12));
+            fm = g.getFontMetrics();
+            x = (WIDTH - fm.stringWidth(text)) / 2;
+            y = (HEIGHT - fm.getHeight()) / 2 + fm.getAscent() +18;
+            g.drawString(text, x, y);
+        }
 
         g.dispose();
         g = bs.getDrawGraphics();
@@ -115,9 +160,6 @@ public class Game extends Canvas implements Runnable, KeyListener {
             }
 
             if(System.currentTimeMillis()-timer>=1000) {
-                System.out.println("FPS: "+frames);
-                System.out.println("Kills: "+kills);
-                System.out.println("Damage: " +damage);
                 frames = 0;
                 timer+=1000;
             }
@@ -126,6 +168,17 @@ public class Game extends Canvas implements Runnable, KeyListener {
         stop();
     }
 
+    public static void verifyEndGame(){
+        if(life<1){
+            gameOver=true;
+            pause=true;
+        }
+    }
+
+    public void clearScreen(){
+        enemies.clearEnemies();
+        player.clearShots();
+    }
 
     @Override
     public void keyTyped(KeyEvent e) {
@@ -138,6 +191,15 @@ public class Game extends Canvas implements Runnable, KeyListener {
             case KeyEvent.VK_LEFT, KeyEvent.VK_A -> player.left=true;
             case KeyEvent.VK_RIGHT, KeyEvent.VK_D -> player.right=true;
             case KeyEvent.VK_SPACE -> player.isShooting=true;
+            case KeyEvent.VK_ESCAPE -> pause=!pause;
+        }
+        if(e.getKeyCode()==KeyEvent.VK_R){
+            clearScreen();
+            if(highScore<kills)highScore=kills;
+            life=5;
+            kills=0;
+            gameOver=false;
+            pause=false;
         }
     }
 
@@ -150,3 +212,9 @@ public class Game extends Canvas implements Runnable, KeyListener {
         }
     }
 }
+
+
+//TODO: manipular inicio e fim de jogo, dando opção atraves de teclas (novos inputs).
+//TODO: drawString para dar direções e comando ao usuário.
+//TODO: TESTES (unitarios, integração e, após os comandos e menus, os de sistema tbm).
+//TODO: menu do jogo.

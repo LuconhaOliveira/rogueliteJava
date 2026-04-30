@@ -3,7 +3,7 @@ import java.awt.*;
 public class Player extends Rectangle {
 
     public boolean right,left,isShooting;
-    public int speed=4;
+    public int speed=5;
     int shotCooldown=6;
 
     PlayerShots playerShots;
@@ -30,6 +30,10 @@ public class Player extends Rectangle {
         g.setColor(new Color(255,255,255));
         g.drawRect(x,y,width,height);
         playerShots.render(g);
+    }
+
+    public void clearShots(){
+        playerShots=new PlayerShots(y);
     }
 
 }

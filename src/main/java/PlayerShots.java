@@ -1,6 +1,5 @@
 import java.awt.*;
 import java.util.ArrayList;
-import java.util.Random;
 
 public class PlayerShots extends Rectangle {
 

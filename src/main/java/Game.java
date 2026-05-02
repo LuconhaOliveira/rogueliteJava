@@ -10,7 +10,7 @@ public class Game extends Canvas implements Runnable, KeyListener {
 
     public JFrame frame;
     public Thread thread;
-    public boolean isRunning = true;
+    public static boolean isRunning = true;
     public static boolean gameOver=false;
     public static boolean pause=false;
     static final int WIDTH =960;
@@ -18,7 +18,7 @@ public class Game extends Canvas implements Runnable, KeyListener {
     private final int SCALE = 1;
     private final BufferedImage image;
     public static int kills = 0;
-    int highScore=0;
+    static int highScore=0;
     public static int life=5;
 
     static Player player;
@@ -26,6 +26,8 @@ public class Game extends Canvas implements Runnable, KeyListener {
     static Enemies enemies;
 
     public static World world;
+
+    static Menu menu;
 
     public Game() {
         addKeyListener(this);
@@ -78,21 +80,21 @@ public class Game extends Canvas implements Runnable, KeyListener {
 
 
 
-        g.setColor(new Color(35, 117, 35));
+        g.setColor(new Color(0, 255, 0));
         g.setFont(new Font(Font.SERIF, Font.BOLD, 12));
         FontMetrics fm = g.getFontMetrics();
 
-        String text="Life: ";
+        String text="Life: "+life;
         g.drawString(text, 8, 22);
 
-        int x = (fm.stringWidth(text))+8;
+        /*int x = (fm.stringWidth(text))+8;
         text="";
         for(int i=1;i<=life;i++){
             text+=".";
         }
-        g.drawString(text, x, 19);
+        g.drawString(text, x, 19);*/
 
-        x += (fm.stringWidth(text))+8+20;
+        int x = (fm.stringWidth(text))+8+20;
         text="Points: "+kills;
         g.drawString(text, x, 22);
 
@@ -115,12 +117,26 @@ public class Game extends Canvas implements Runnable, KeyListener {
             int y = (HEIGHT - fm.getHeight()) / 2 + fm.getAscent();
             g.drawString(text, x, y);
 
-            text="pressione 'R' para reiniciar.";
+            text="press 'R' to restart.";
             g.setFont(new Font(Font.SERIF, Font.BOLD, 12));
             fm = g.getFontMetrics();
             x = (WIDTH - fm.stringWidth(text)) / 2;
             y = (HEIGHT - fm.getHeight()) / 2 + fm.getAscent() +18;
             g.drawString(text, x, y);
+        }
+        if(pause&&!gameOver){
+            g.setColor(new Color(50,50,50));
+            g.fillRect(0,(HEIGHT/2)-100,WIDTH,200);
+
+            g.setColor(new Color(255,255,255));
+            g.setFont(new Font(Font.SERIF, Font.BOLD, 24));
+            fm = g.getFontMetrics();
+            text="PAUSED";
+            x = (WIDTH - fm.stringWidth(text)) / 2;
+            int y = (HEIGHT - fm.getHeight()) / 2 + fm.getAscent()-70;
+            g.drawString(text, x, y);
+
+            menu.render(g);
         }
 
         g.dispose();
@@ -136,6 +152,7 @@ public class Game extends Canvas implements Runnable, KeyListener {
         player = new Player(WIDTH / 2 - 16, HEIGHT - 64);
         enemies = new Enemies(WIDTH, HEIGHT-64);
         world = new World();
+        menu = new Menu(0,HEIGHT/2-100,WIDTH,200);
 
         game.start();
     }
@@ -160,6 +177,7 @@ public class Game extends Canvas implements Runnable, KeyListener {
             }
 
             if(System.currentTimeMillis()-timer>=1000) {
+                System.out.println("FPS: "+frames);
                 frames = 0;
                 timer+=1000;
             }
@@ -175,9 +193,18 @@ public class Game extends Canvas implements Runnable, KeyListener {
         }
     }
 
-    public void clearScreen(){
+    public static void clearScreen(){
         enemies.clearEnemies();
         player.clearShots();
+    }
+
+    public static void resetGame(){
+        clearScreen();
+        if(highScore<kills)highScore=kills;
+        life=5;
+        kills=0;
+        gameOver=false;
+        pause=false;
     }
 
     @Override
@@ -191,15 +218,34 @@ public class Game extends Canvas implements Runnable, KeyListener {
             case KeyEvent.VK_LEFT, KeyEvent.VK_A -> player.left=true;
             case KeyEvent.VK_RIGHT, KeyEvent.VK_D -> player.right=true;
             case KeyEvent.VK_SPACE -> player.isShooting=true;
-            case KeyEvent.VK_ESCAPE -> pause=!pause;
-        }
-        if(e.getKeyCode()==KeyEvent.VK_R){
-            clearScreen();
-            if(highScore<kills)highScore=kills;
-            life=5;
-            kills=0;
-            gameOver=false;
-            pause=false;
+            case KeyEvent.VK_ESCAPE -> {
+                if(!gameOver){
+                    menu.selectedValue=0;
+                    pause=!pause;
+                }
+            }
+            case KeyEvent.VK_UP, KeyEvent.VK_W -> {
+                if(pause&&!gameOver){
+                    if(menu.selectedValue<=0){
+                        menu.selectedValue=menu.options.length-1;
+                    }
+                    else{
+                        menu.selectedValue--;
+                    }
+                }
+            }
+            case KeyEvent.VK_DOWN, KeyEvent.VK_S -> {
+                if(pause&&!gameOver){
+                    if(menu.selectedValue>=menu.options.length-1){
+                        menu.selectedValue=0;
+                    }
+                    else{
+                        menu.selectedValue++;
+                    }
+                }
+            }
+            case KeyEvent.VK_ENTER -> {if(pause&&!gameOver)menu.executeOption();}
+            case KeyEvent.VK_R -> resetGame();
         }
     }
 
@@ -214,7 +260,7 @@ public class Game extends Canvas implements Runnable, KeyListener {
 }
 
 
-//TODO: manipular inicio e fim de jogo, dando opção atraves de teclas (novos inputs).
-//TODO: drawString para dar direções e comando ao usuário.
-//TODO: TESTES (unitarios, integração e, após os comandos e menus, os de sistema tbm).
-//TODO: menu do jogo.
+//TODO: REFATORAR CODIGO PELO AMOR DE DEUS QUE ESPAGUETE FEIO DA PORRA ARRUMA ESSA MERDA.
+//TODO: Poderes.
+//TODO: Beta-testing.
+//TODO: Mudar linguas: inglês e portugues. russo?...
